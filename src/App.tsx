@@ -1,17 +1,20 @@
-import { useQuery } from "@tanstack/react-query"
-import { getWeather } from "./api"
-
+import { useQuery } from "@tanstack/react-query";
+import { getWeather } from "./api";
+import HourlyForecast from "./components/cards/HourlyForecast";
+import DailyForecast from "./components/cards/DailyForecast";
 
 const App = () => {
-
-  const {data} = useQuery({
-    queryKey: ['weather'],
-    queryFn: () => getWeather({})
-  })
+  const { data } = useQuery({
+    queryKey: ["weather"],
+    queryFn: () => getWeather({ lat: 10, lon: 25 }),
+  });
 
   return (
-    <div>App</div>
-  )
-}
+    <div>
+      <HourlyForecast coords={{ lat: 10, lon: 25 }} />
+      <DailyForecast coords={{ lat: 10, lon: 25 }} />
+    </div>
+  );
+};
 
-export default App
+export default App;

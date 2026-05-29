@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getWeather } from "./api";
 import HourlyForecast from "./components/cards/HourlyForecast";
 import DailyForecast from "./components/cards/DailyForecast";
+import CurrentWeather from "./components/cards/CurrentWeather";
 
 const App = () => {
   const { data } = useQuery({
@@ -11,6 +12,7 @@ const App = () => {
 
   return (
     <div>
+      <CurrentWeather coords={{ lat: 10, lon: 25 }} />
       <HourlyForecast coords={{ lat: 10, lon: 25 }} />
       <DailyForecast coords={{ lat: 10, lon: 25 }} />
     </div>

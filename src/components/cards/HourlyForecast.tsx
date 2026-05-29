@@ -13,6 +13,7 @@ export default function HourlyForecast({ coords }: Props) {
     queryKey: ["weather", coords],
     queryFn: () => getWeather({ lat: coords.lat, lon: coords.lon }),
   });
+  
   return (
     <Card title="Hourly Forecast (48 Hours)" childrenClassName="flex gap-6 overflow-x-scroll">
       {data.hourly.map((hour) => (

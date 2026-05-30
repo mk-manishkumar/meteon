@@ -13,7 +13,7 @@ export default function CurrentWeather({ coords }: Props) {
     queryKey: ["weather", coords],
     queryFn: () => getWeather({ lat: coords.lat, lon: coords.lon }),
   });
-  
+
   return (
     <Card title="Current Weather" className="md:pb-11" childrenClassName="flex flex-col items-center gap-6 2xl:justify-between">
       <div className="flex flex-col gap-2 items-center">
@@ -24,7 +24,7 @@ export default function CurrentWeather({ coords }: Props) {
       <div className="flex flex-col gap-2">
         <p className="text-xl text-center">Local Time:</p>
         <h3 className="text-4xl font-semibold">
-          {new Intl.DateTimeFormat("en-US", {
+          {new Intl.DateTimeFormat("en-IN", {
             hour: "2-digit",
             minute: "2-digit",
             hour12: true,

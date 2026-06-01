@@ -53,8 +53,8 @@ function MapTileLayer() {
 
   useEffect(() => {
     const tileLayer = new MaptilerLayer({
-      style: "basic-dark",
-      apiKey: "IhKaCSDZTkOXDUTqcSbm",
+      style: "streets-v2",
+      apiKey: import.meta.env.VITE_MAPTILER_KEY,
     });
 
     tileLayer.addTo(map);

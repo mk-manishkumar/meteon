@@ -24,4 +24,4 @@ export default function LocationDropdown({ location, setLocation }: Props) {
   );
 }
 
-const locations = ["Bangkok", "Tokyo", "Seoul", "Dubai", "Manila", "London", "New York", "Paris", "Berlin", "Madrid", "Rome", "Lisbon"];
+const locations = ["Bangkok", "Tokyo", "Seoul", "Dubai", "Mumbai", "London", "New York", "Paris", "Berlin", "Madrid", "Patna", "Lisbon"];

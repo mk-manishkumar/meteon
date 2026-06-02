@@ -17,19 +17,64 @@ type Props = Readonly<{
 export default function AdditionalInfo({ coords }: Props) {
   const { data } = useSuspenseQuery({
     queryKey: ["weather", coords],
-    queryFn: () => getWeather({ lat: coords.lat, lon: coords.lon }),
+    queryFn: () =>
+      getWeather({
+        lat: coords.lat,
+        lon: coords.lon,
+      }),
   });
+
+  const rows = [
+    {
+      label: "Cloudiness (%)",
+      value: data.current.cloud_cover,
+      Icon: Cloud,
+      type: "number",
+    },
+    {
+      label: "UV Index",
+      value: data.daily.uv_index_max[0] ?? 0,
+      Icon: Uv,
+      type: "number",
+    },
+    {
+      label: "Wind Direction",
+      value: data.current.wind_direction_10m,
+      Icon: Wind,
+      type: "wind",
+    },
+    {
+      label: "Pressure (hPa)",
+      value: data.current.pressure_msl,
+      Icon: Pressure,
+      type: "number",
+    },
+    {
+      label: "Sunrise",
+      value: data.daily.sunrise[0],
+      Icon: Sunrise,
+      type: "time",
+    },
+    {
+      label: "Sunset",
+      value: data.daily.sunset[0],
+      Icon: Sunset,
+      type: "time",
+    },
+  ] as const;
 
   return (
     <Card title="Additional Weather Info" childrenClassName="grid grid-cols-1 md:grid-cols-2 gap-8">
-      {rows.map(({ label, value, Icon }) => (
-        <div className="flex justify-between" key={value}>
+      {rows.map(({ label, value, Icon, type }) => (
+        <div className="flex justify-between" key={label}>
           <div className="flex gap-4">
             <span className="text-gray-500">{label}</span>
+
             <Icon className="size-8" />
           </div>
+
           <span>
-            <FormatComponent value={value} number={data.current[value]} />
+            <FormatValue value={value} type={type} />
           </span>
         </div>
       ))}
@@ -37,48 +82,23 @@ export default function AdditionalInfo({ coords }: Props) {
   );
 }
 
-function FormatComponent({ value, number }: Readonly<{ value: string; number: number }>) {
-  if (value === "sunrise" || value === "sunset")
-    return new Date(number * 1000).toLocaleTimeString(undefined, {
+type FormatValueProps = Readonly<{
+  value: string | number;
+  type: "number" | "time" | "wind";
+}>;
+
+function FormatValue({ value, type }: FormatValueProps) {
+  if (type === "time") {
+    return new Date(String(value)).toLocaleTimeString(undefined, {
       hour: "numeric",
       minute: "2-digit",
       hour12: true,
     });
+  }
 
-  if (value === "wind_deg") return <UpArrow className="size-8" style={{ transform: `rotate(${number}deg)` }} />;
+  if (type === "wind") {
+    return <UpArrow className="size-8" style={{ transform: `rotate(${Number(value)}deg)` }} />;
+  }
 
-  return number;
+  return <>{value}</>;
 }
-
-const rows = [
-  {
-    label: "Cloudiness (%)",
-    value: "clouds",
-    Icon: Cloud,
-  },
-  {
-    label: "UV Index",
-    value: "uvi",
-    Icon: Uv,
-  },
-  {
-    label: "Wind Direction",
-    value: "wind_deg",
-    Icon: Wind,
-  },
-  {
-    label: "Pressure (hPa)",
-    value: "pressure",
-    Icon: Pressure,
-  },
-  {
-    label: "Sunrise",
-    value: "sunrise",
-    Icon: Sunrise,
-  },
-  {
-    label: "Sunset",
-    value: "sunset",
-    Icon: Sunset,
-  },
-] as const;

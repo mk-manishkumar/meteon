@@ -1,11 +1,9 @@
 import { useEffect } from "react";
-import { MapContainer, Marker, TileLayer, useMap, useMapEvents } from "react-leaflet";
+import { MapContainer, Marker, useMap, useMapEvents } from "react-leaflet";
 import type { LeafletMouseEvent } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { MaptilerLayer } from "@maptiler/leaflet-maptilersdk";
 import type { Coords } from "../types";
-
-const API_KEY = import.meta.env.VITE_API_KEY;
 
 type Props = Readonly<{
   coords: Coords;
@@ -17,12 +15,17 @@ export default function WeatherMap({ coords, onMapClick, mapType }: Props) {
   const { lat, lon } = coords;
 
   return (
-    <MapContainer center={[lat, lon]} zoom={5} style={{ width: "100%", height: "100%" }}>
+    <MapContainer
+      center={[lat, lon]}
+      zoom={5}
+      style={{
+        width: "100%",
+        height: "100%",
+      }}
+    >
       <MapClick onMapClick={onMapClick} coords={coords} />
 
-      <MapTileLayer />
-
-      <TileLayer opacity={0.7} url={`https://tile.openweathermap.org/map/${mapType}/{z}/{x}/{y}.png?appid=${API_KEY}`} />
+      <MapTileLayer mapType={mapType} />
 
       <Marker position={[lat, lon]} />
     </MapContainer>
@@ -48,12 +51,12 @@ function MapClick({ onMapClick, coords }: MapClickProps) {
   return null;
 }
 
-function MapTileLayer() {
+function MapTileLayer({ mapType }: { mapType: string }) {
   const map = useMap();
 
   useEffect(() => {
     const tileLayer = new MaptilerLayer({
-      style: "streets-v2",
+      style: mapType,
       apiKey: import.meta.env.VITE_MAPTILER_KEY,
     });
 
@@ -62,7 +65,7 @@ function MapTileLayer() {
     return () => {
       map.removeLayer(tileLayer);
     };
-  }, [map]);
+  }, [map, mapType]);
 
   return null;
 }

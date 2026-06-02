@@ -11,22 +11,37 @@ type Props = Readonly<{
 export default function DailyForecast({ coords }: Props) {
   const { data } = useSuspenseQuery({
     queryKey: ["weather", coords],
-    queryFn: () => getWeather({ lat: coords.lat, lon: coords.lon }),
+    queryFn: () =>
+      getWeather({
+        lat: coords.lat,
+        lon: coords.lon,
+      }),
   });
+
+  const days = data.daily.time.map((time, index) => ({
+    time,
+    weatherCode: data.daily.weather_code[index],
+    minTemp: data.daily.temperature_2m_min[index],
+    maxTemp: data.daily.temperature_2m_max[index],
+  }));
 
   return (
     <Card title="Daily Forecast" childrenClassName="flex flex-col gap-4 2xl:justify-between">
-      {data?.daily.map((day) => (
-        <div key={day.dt} className="flex justify-between">
+      {days.map((day) => (
+        <div key={day.time} className="flex justify-between">
           <p className="w-9">
-            {new Date(day.dt * 1000).toLocaleDateString(undefined, {
+            {new Date(day.time).toLocaleDateString(undefined, {
               weekday: "short",
             })}
           </p>
-          <WeatherIcon src={day.weather[0].icon} />
-          <p>{Math.round(day.temp.day)}°F</p>
-          <p className="text-gray-500/75">{Math.round(day.temp.min)}°F</p>
-          <p className="text-gray-500/75">{Math.round(day.temp.max)}°F</p>
+
+          <WeatherIcon code={day.weatherCode} />
+
+          <p>{Math.round((day.minTemp + day.maxTemp) / 2)}°</p>
+
+          <p className="text-gray-500/75">{Math.round(day.minTemp)}°</p>
+
+          <p className="text-gray-500/75">{Math.round(day.maxTemp)}°</p>
         </div>
       ))}
     </Card>

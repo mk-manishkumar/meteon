@@ -3,25 +3,17 @@ import HourlyForecast from "./components/cards/HourlyForecast";
 import CurrentWeather from "./components/cards/CurrentWeather";
 import AdditionalInfo from "./components/cards/AdditionalInfo";
 import AirPollution from "./components/cards/AirPollution";
-
 import Map from "./components/Map";
-
 import { Suspense, useState } from "react";
-
 import type { Coords } from "./types";
-
 import LocationDropdown from "./components/dropdowns/LocationDropdown";
 import MapTypeDropdown from "./components/dropdowns/MapTypeDropdown";
-
 import { useQuery } from "@tanstack/react-query";
 import { getGeocode } from "./api";
-
 import CurrentSkeleton from "./components/skeletons/CurrentSkeleton";
 import DailySkeleton from "./components/skeletons/DailySkeleton";
 import HourlySkeleton from "./components/skeletons/HourlySkeleton";
 import AdditionalInfoSkeleton from "./components/skeletons/AdditionalInfoSkeleton";
-
-import LightDarkToggle from "./components/LightDarkToggle";
 
 function App() {
   const [coordinates, setCoordinates] = useState<Coords>({ lat: 50, lon: 45 });
@@ -61,10 +53,6 @@ function App() {
           <h1 className="text-2xl font-semibold whitespace-nowrap">Map Type:</h1>
 
           <MapTypeDropdown mapType={mapType} setMapType={setMapType} />
-        </div>
-
-        <div className="ml-auto">
-          <LightDarkToggle />
         </div>
       </div>
 

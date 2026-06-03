@@ -14,6 +14,8 @@ import CurrentSkeleton from "./components/skeletons/CurrentSkeleton";
 import DailySkeleton from "./components/skeletons/DailySkeleton";
 import HourlySkeleton from "./components/skeletons/HourlySkeleton";
 import AdditionalInfoSkeleton from "./components/skeletons/AdditionalInfoSkeleton";
+import AIWeatherSkeleton from "./AI/AIWeatherSkeleton";
+import AIWeatherAssistant from "./AI/AIWeatherAssistant";
 
 function App() {
   const [coordinates, setCoordinates] = useState<Coords>({ lat: 50, lon: 45 });
@@ -88,6 +90,12 @@ function App() {
         <div className="col-span-1 md:col-span-2 2xl:col-span-4">
           <Suspense fallback={<AdditionalInfoSkeleton />}>
             <AirPollution coords={coords} />
+          </Suspense>
+        </div>
+
+        <div className="col-span-1 md:col-span-2 2xl:col-span-4">
+          <Suspense fallback={<AIWeatherSkeleton />}>
+            <AIWeatherAssistant coords={coords} />
           </Suspense>
         </div>
       </div>

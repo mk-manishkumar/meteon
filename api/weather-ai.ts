@@ -1,10 +1,10 @@
 import "dotenv/config";
-import { GoogleGenAI } from "@google/genai";
+import Groq from "groq-sdk";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { buildWeatherPrompt } from "../src/AI/aiPrompt";
 
-const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY,
+const groq = new Groq({
+  apiKey: process.env.GROQ_API_KEY,
 });
 
 const cache = new Map<string, { data: unknown; timestamp: number }>();
@@ -36,14 +36,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const prompt = buildWeatherPrompt(weather, air);
 
-    const response = await ai.models.generateContent({
-      model: "gemini-2.0-flash",
-      contents: prompt,
+    const completion = await groq.chat.completions.create({
+      model: "llama-3.1-8b-instant",
+      temperature: 0.3,
+      messages: [
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
     });
 
-    const text = response.text?.trim();
+    const text = completion.choices[0]?.message?.content?.trim();
 
-    if (!text) throw new Error("Empty Gemini response");
+    if (!text) throw new Error("Empty Groq response");
 
     const cleaned = text.replaceAll("```json", "").replaceAll("```", "").trim();
 

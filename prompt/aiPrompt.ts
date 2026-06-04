@@ -1,4 +1,4 @@
-import type { AirPollutionData, WeatherData } from "../types";
+import type { WeatherData, AirPollutionData } from "../src/types";
 
 export function buildWeatherPrompt(weather: WeatherData, air: AirPollutionData) {
   const current = weather.current;

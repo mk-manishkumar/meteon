@@ -1,7 +1,7 @@
 import "dotenv/config";
 import Groq from "groq-sdk";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { buildWeatherPrompt } from "../src/AI/aiPrompt";
+import { buildWeatherPrompt } from "../prompt/aiPrompt";
 
 const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY,

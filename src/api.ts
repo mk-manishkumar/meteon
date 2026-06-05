@@ -1,8 +1,14 @@
 import axios from "axios";
-import type { AIWeatherResponse } from "./components/ai/aiTypes";
 import { AirPollutionSchema } from "./schemas/airPollutionSchema";
 import { GeocodeSchema } from "./schemas/geocodeSchema";
 import { weatherSchema } from "./schemas/weatherSchema";
+
+type AIWeatherResponse = {
+  summary: string;
+  clothing: string;
+  bestTimeOutside: string;
+};
+
 
 // Get weather data for a specific location
 export async function getWeather({ lat, lon }: { lat: number; lon: number }) {

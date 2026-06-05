@@ -1,7 +1,7 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { getAIWeather } from "../api";
-import type { Coords } from "../types";
-import Card from "../components/cards/Card";
+import { getAIWeather } from "../../api";
+import type { Coords } from "../../types";
+import Card from "../cards/Card";
 
 type Props = Readonly<{
   coords: Coords;

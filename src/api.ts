@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { AIWeatherResponse } from "./AI/aiTypes";
+import type { AIWeatherResponse } from "./components/ai/aiTypes";
 import { AirPollutionSchema } from "./schemas/airPollutionSchema";
 import { GeocodeSchema } from "./schemas/geocodeSchema";
 import { weatherSchema } from "./schemas/weatherSchema";

@@ -1,15 +1,68 @@
 import "dotenv/config";
 import Groq from "groq-sdk";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { buildWeatherPrompt } from "../prompt/aiPrompt";
+import type { WeatherData, AirPollutionData } from "../src/types";
+
+type AIWeatherResponse = {
+  summary: string;
+  clothing: string;
+  bestTimeOutside: string;
+};
 
 const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY,
 });
 
-const cache = new Map<string, { data: unknown; timestamp: number }>();
+const cache = new Map<
+  string,
+  {
+    data: AIWeatherResponse;
+    timestamp: number;
+  }
+>();
 
 const CACHE_DURATION = 1000 * 60 * 30; // 30 minutes
+
+function buildWeatherPrompt(weather: WeatherData, air: AirPollutionData) {
+  const current = weather.current;
+
+  const aqi = air.hourly.us_aqi?.[0] ?? "Unknown";
+
+  const nextHours = weather.hourly.temperature_2m.slice(0, 12).join(", ");
+
+  return `
+You are an expert weather assistant.
+
+Current Weather:
+Temperature: ${current.temperature_2m}°C
+Feels Like: ${current.apparent_temperature}°C
+Humidity: ${current.relative_humidity_2m}%
+Wind Speed: ${current.wind_speed_10m} km/h
+Pressure: ${current.pressure_msl} hPa
+Cloud Cover: ${current.cloud_cover}%
+
+Air Quality:
+US AQI: ${aqi}
+
+Next 12 Hours Temperature:
+${nextHours}
+
+Return ONLY valid JSON:
+
+{
+  "summary": "",
+  "clothing": "",
+  "bestTimeOutside": ""
+}
+
+Rules:
+- Keep summary under 40 words
+- Keep clothing under 30 words
+- Keep bestTimeOutside under 30 words
+- No markdown
+- No extra text
+`;
+}
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "POST") {
@@ -19,7 +72,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    const { weather, air } = req.body;
+    const {
+      weather,
+      air,
+    }: {
+      weather: WeatherData;
+      air: AirPollutionData;
+    } = req.body;
 
     const cacheKey = JSON.stringify({
       latitude: weather.latitude,
@@ -49,11 +108,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const text = completion.choices[0]?.message?.content?.trim();
 
-    if (!text) throw new Error("Empty Groq response");
+    if (!text) {
+      throw new Error("Empty Groq response");
+    }
 
     const cleaned = text.replaceAll("```json", "").replaceAll("```", "").trim();
 
-    const parsed = JSON.parse(cleaned);
+    const parsed: AIWeatherResponse = JSON.parse(cleaned);
 
     cache.set(cacheKey, {
       data: parsed,

@@ -14,8 +14,8 @@ import CurrentSkeleton from "./components/skeletons/CurrentSkeleton";
 import DailySkeleton from "./components/skeletons/DailySkeleton";
 import HourlySkeleton from "./components/skeletons/HourlySkeleton";
 import AdditionalInfoSkeleton from "./components/skeletons/AdditionalInfoSkeleton";
-import AIWeatherSkeleton from "./AI/AIWeatherSkeleton";
-import AIWeatherAssistant from "./AI/AIWeatherAssistant";
+import AIWeatherSkeleton from "./components/ai/AIWeatherSkeleton";
+import AIWeatherAssistant from "./components/ai/AIWeatherAssistant";
 
 function App() {
   const [coordinates, setCoordinates] = useState<Coords>({ lat: 50, lon: 45 });

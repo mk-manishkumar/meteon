@@ -1,5 +1,5 @@
-import Card from "../components/cards/Card";
-import { Skeleton } from "../components/ui/skeleton";
+import Card from "../cards/Card";
+import { Skeleton } from "../ui/skeleton";
 
 export default function AIWeatherSkeleton() {
   return (
